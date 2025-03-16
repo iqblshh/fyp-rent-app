@@ -156,8 +156,8 @@ class _RentTimerPageState extends State<RentTimerPage> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('kk:mm:ss').format(now);
+    DateTime now = DateTime.now().add(const Duration(minutes:10));
+    String formattedDate = DateFormat('kk:mm').format(now);
     return Scaffold(
       appBar: AppBar(title: Text('Active Rentals')),
       body: ListView.builder(
