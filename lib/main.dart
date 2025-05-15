@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'views/index_page.dart';
+import 'package:fyp_iqbal/pages/home_page.dart';
 
 void main() {
   runApp(RentApp());
@@ -9,11 +9,12 @@ class RentApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Smart Toy Car Rent',
+      title: 'Flutter SQFLite Example',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
-      home: IndexPage(),
+      home: HomePage(),
     );
   }
 }

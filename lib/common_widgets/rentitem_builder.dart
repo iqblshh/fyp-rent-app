@@ -1,0 +1,119 @@
+import 'package:flutter/material.dart';
+import 'package:fyp_iqbal/models/rentitem.dart';
+import 'package:fyp_iqbal/services/database_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+class RentItemBuilder extends StatelessWidget {
+  const RentItemBuilder({
+    Key? key,
+    required this.future,
+    required this.onEdit,
+    required this.onDelete,
+  }) : super(key: key);
+  final Future<List<RentItem>> future;
+  final Function(RentItem) onEdit;
+  final Function(RentItem) onDelete;
+
+  Future<String> getItemTypeName(int id) async {
+    final DatabaseService _databaseService = DatabaseService();
+    final itemtype = await _databaseService.itemtype(id);
+    return itemtype.name;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<RentItem>>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              final rentitem = snapshot.data![index];
+              return _buildRentItemCard(rentitem, context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildRentItemCard(RentItem rentitem, BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Container(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[200],
+              ),
+              alignment: Alignment.center,
+              child: FaIcon(FontAwesomeIcons.dog, size: 18.0),
+            ),
+            SizedBox(width: 20.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    rentitem.name,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 4.0),
+                  FutureBuilder<String>(
+                    future: getItemTypeName(rentitem.itemtypeId),
+                    builder: (context, snapshot) {
+                      return Text('ItemType: ${snapshot.data}');
+                    },
+                  ),
+                  SizedBox(height: 4.0),
+                ],
+              ),
+            ),
+            SizedBox(width: 20.0),
+            GestureDetector(
+              onTap: () => onEdit(rentitem),
+              child: Container(
+                height: 40.0,
+                width: 40.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
+                ),
+                alignment: Alignment.center,
+                child: Icon(Icons.edit, color: Colors.orange[800]),
+              ),
+            ),
+            SizedBox(width: 20.0),
+            GestureDetector(
+              onTap: () => onDelete(rentitem),
+              child: Container(
+                height: 40.0,
+                width: 40.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
+                ),
+                alignment: Alignment.center,
+                child: Icon(Icons.delete, color: Colors.red[800]),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
