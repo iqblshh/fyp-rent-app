@@ -67,7 +67,7 @@ class RentalBuilder extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4.0),
-                  Text(rental.time),
+                  Text(rental.endtime),
                   SizedBox(width: 2.0),
                   Text(rental.date),
                   SizedBox(width: 2.0),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/models/rentitem.dart';
 import 'package:fyp_iqbal/services/database_service.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RentItemBuilder extends StatelessWidget {
   const RentItemBuilder({
@@ -9,11 +8,13 @@ class RentItemBuilder extends StatelessWidget {
     required this.future,
     required this.onEdit,
     required this.onDelete,
+    required this.onBook,
     this.showActions = true,
   }) : super(key: key);
   final Future<List<RentItem>> future;
   final Function(RentItem) onEdit;
   final Function(RentItem) onDelete;
+  final Function(RentItem, int) onBook;
   final bool showActions;
 
   Future<String> getItemTypeName(int id) async {
@@ -52,16 +53,21 @@ class RentItemBuilder extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            Container(
-              height: 40.0,
-              width: 40.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey[200],
+            if (!showActions) ...[
+              GestureDetector(
+                onTap: () => onBook(rentitem, 0),
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[200],
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.close, color: Colors.orange[800]),
+                ),
               ),
-              alignment: Alignment.center,
-              child: FaIcon(FontAwesomeIcons.dog, size: 18.0),
-            ),
+            ],
             SizedBox(width: 20.0),
             Expanded(
               child: Column(
@@ -115,6 +121,21 @@ class RentItemBuilder extends StatelessWidget {
                 ),
               ),
             ],
+            if (!showActions) ...[
+              GestureDetector(
+                onTap: () => onBook(rentitem, 1),
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[200],
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.check, color: Colors.green),
+                ),
+              ),
+            ]
           ],
         ),
       ),

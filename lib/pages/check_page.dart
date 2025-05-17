@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/common_widgets/rentitem_builder.dart';
-import 'package:fyp_iqbal/common_widgets/itemtype_builder.dart';
 import 'package:fyp_iqbal/common_widgets/rental_builder.dart';
-import 'package:fyp_iqbal/models/itemtype.dart';
 import 'package:fyp_iqbal/models/rentitem.dart';
 import 'package:fyp_iqbal/models/rental.dart';
-import 'package:fyp_iqbal/pages/itemtype_form_page.dart';
-import 'package:fyp_iqbal/pages/rentitem_form_page.dart';
 import 'package:fyp_iqbal/services/database_service.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class CheckPage extends StatefulWidget {
-  const CheckPage({Key? key}) : super(key: key);
+  const CheckPage({Key? key, this.rental}) : super(key: key);
+  final Rental? rental;
 
   @override
   _CheckPageState createState() => _CheckPageState();
@@ -24,12 +21,42 @@ class _CheckPageState extends State<CheckPage> {
     return await _databaseService.rentitems();
   }
 
-  Future<List<ItemType>> _getItemTypes() async {
-    return await _databaseService.itemtypes();
-  }
-
   Future<List<Rental>> _getRentals() async {
     return await _databaseService.rentals();
+  }
+
+///
+  /**
+   * 
+  id
+  itemId
+  itemType
+  itemName
+  statime
+  endtime
+  date
+  price
+  status
+   * 
+   */
+///
+
+  Future<void> _onBookItem(RentItem rentitem, int status) async {
+    final itemtypes = await _databaseService.itemtypes();
+    final now = DateTime.now();
+
+    await _databaseService.insertRental(
+      Rental(
+        itemId: rentitem.id!, 
+        itemType: itemtypes[rentitem.itemtypeId].name, 
+        itemName: rentitem.name, 
+        statime: DateFormat.Hm().format(now), 
+        endtime: DateFormat.Hm().format(now.add(Duration(minutes: itemtypes[rentitem.itemtypeId].timer))), 
+        date: DateFormat.yMEd().format(now), 
+        price: itemtypes[rentitem.itemtypeId].price, 
+        status: status,
+      ),
+    );
   }
 
   @override
@@ -59,6 +86,7 @@ class _CheckPageState extends State<CheckPage> {
               future: _getRentItems(),
               onEdit: (_) {}, // You can still provide a dummy function
               onDelete: (_) {},
+              onBook: _onBookItem,
               showActions: false,
             ),
             RentalBuilder(
