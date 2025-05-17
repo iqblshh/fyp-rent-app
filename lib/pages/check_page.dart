@@ -5,6 +5,7 @@ import 'package:fyp_iqbal/models/rentitem.dart';
 import 'package:fyp_iqbal/models/rental.dart';
 import 'package:fyp_iqbal/services/database_service.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
 
 class CheckPage extends StatefulWidget {
   const CheckPage({Key? key, this.rental}) : super(key: key);
@@ -16,30 +17,37 @@ class CheckPage extends StatefulWidget {
 
 class _CheckPageState extends State<CheckPage> {
   final DatabaseService _databaseService = DatabaseService();
+  Timer? _refreshTimer;
+  
+  @override
+  void initState() {
+    super.initState();
+    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
 
   Future<List<RentItem>> _getRentItems() async {
     return await _databaseService.rentitems();
   }
 
   Future<List<Rental>> _getRentals() async {
-    return await _databaseService.rentals();
-  }
+    final allRentals = await _databaseService.rentals();
+    final today = DateTime.now();
 
-///
-  /**
-   * 
-  id
-  itemId
-  itemType
-  itemName
-  statime
-  endtime
-  date
-  price
-  status
-   * 
-   */
-///
+    return allRentals.where((rental) {
+      final rentalDate = DateFormat.yMEd().parse(rental.date);
+      return rentalDate.year == today.year &&
+            rentalDate.month == today.month &&
+            rentalDate.day == today.day;
+    }).toList();
+  }
 
   Future<void> _onBookItem(RentItem rentitem, int status) async {
     final itemtypes = await _databaseService.itemtypes();
@@ -96,7 +104,6 @@ class _CheckPageState extends State<CheckPage> {
             ),
             RentalBuilder(
               future: _getRentals(),
-              filterToday: true,
             ),
           ],
         ),

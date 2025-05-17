@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/models/rental.dart';
-import 'package:intl/intl.dart';
 
-class RentalBuilder extends StatelessWidget {
+class RentalBuilder extends StatefulWidget {
   const RentalBuilder({
     Key? key,
     required this.future,
-    this.filterToday = false,
   }) : super(key: key);
   final Future<List<Rental>> future;
-  final bool filterToday;
+
+  @override
+  _RentalBuilderState createState() => _RentalBuilderState();
+}
+
+class _RentalBuilderState extends State<RentalBuilder> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Rental>>(
-      future: future,
+      future: widget.future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -26,19 +44,16 @@ class RentalBuilder extends StatelessWidget {
           return Center(child: Text('No rentals found'));
         }
 
-        List<Rental> rentals = snapshot.data!;
-
-        if (filterToday) {
-          final today = DateFormat.yMEd().format(DateTime.now());
-          rentals = rentals.where((r) => r.date == today).toList();
-        }
+        // Scroll to bottom after frame renders
+        _scrollToBottom();
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ListView.builder(
-            itemCount: rentals.length,
+            controller: _scrollController,
+            itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              final rental = rentals[index];
+              final rental = snapshot.data![index];
               return _buildRentalCard(rental, context);
             },
           ),
@@ -75,18 +90,37 @@ class RentalBuilder extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    rental.itemType,
+                    "${rental.itemType} ${rental.itemName}",
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(height: 4.0),
-                  Text(rental.endtime),
+                  Text(
+                    "Start- ${rental.statime}",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      //fontWeight: FontWeight.w500,
+                    )
+                  ),
                   SizedBox(width: 2.0),
-                  Text(rental.date),
+                  Text(
+                    "End- ${rental.endtime}",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      //fontWeight: FontWeight.w500,
+                    )
+                  ),
                   SizedBox(width: 2.0),
-                  Text(rental.price.toString()),
+                  Text(
+                    //"Price- RM${rental.price.toString()}",
+                    "Status- ${rental.status}",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      //fontWeight: FontWeight.w500,
+                    )
+                  ),
                 ],
               ),
             ),
