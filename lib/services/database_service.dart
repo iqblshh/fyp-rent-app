@@ -61,7 +61,7 @@ class DatabaseService {
     await db.execute('''
       CREATE TABLE rentals(
           id INTEGER PRIMARY KEY,
-          rentitemId INTEGER
+          rentitemId INTEGER,
           itemType TEXT, 
           itemName TEXT, 
           time TEXT, 
