@@ -96,6 +96,7 @@ class _CheckPageState extends State<CheckPage> {
             ),
             RentalBuilder(
               future: _getRentals(),
+              filterToday: true,
             ),
           ],
         ),
