@@ -92,8 +92,8 @@ class _ItemTypeFormPageState extends State<ItemTypeFormPage> {
               ),
               value: _isCustomTimer ? null : _selectedTimer,
               items: const [
-                DropdownMenuItem(value: 10, child: Text('10 seconds')),
-                DropdownMenuItem(value: 15, child: Text('15 seconds')),
+                DropdownMenuItem(value: 10, child: Text('10 minutes')),
+                DropdownMenuItem(value: 15, child: Text('15 minutes')),
                 DropdownMenuItem(value: null, child: Text('Other')),
               ],
               onChanged: (value) {
@@ -112,7 +112,7 @@ class _ItemTypeFormPageState extends State<ItemTypeFormPage> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Enter custom timer in seconds',
+                  hintText: 'Enter custom timer in minutes',
                 ),
               ),
             SizedBox(height: 16.0),

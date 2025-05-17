@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_iqbal/pages/home_page.dart';
+import 'package:fyp_iqbal/index_page.dart';
 
 void main() {
   runApp(RentApp());
@@ -14,7 +14,7 @@ class RentApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: HomePage(),
+      home: IndexPage(),
     );
   }
 }

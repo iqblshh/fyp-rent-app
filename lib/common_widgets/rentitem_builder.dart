@@ -9,10 +9,12 @@ class RentItemBuilder extends StatelessWidget {
     required this.future,
     required this.onEdit,
     required this.onDelete,
+    this.showActions = true,
   }) : super(key: key);
   final Future<List<RentItem>> future;
   final Function(RentItem) onEdit;
   final Function(RentItem) onDelete;
+  final bool showActions;
 
   Future<String> getItemTypeName(int id) async {
     final DatabaseService _databaseService = DatabaseService();
@@ -84,33 +86,35 @@ class RentItemBuilder extends StatelessWidget {
               ),
             ),
             SizedBox(width: 20.0),
-            GestureDetector(
-              onTap: () => onEdit(rentitem),
-              child: Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey[200],
+            if (showActions) ...[
+              GestureDetector(
+                onTap: () => onEdit(rentitem),
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[200],
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.edit, color: Colors.orange[800]),
                 ),
-                alignment: Alignment.center,
-                child: Icon(Icons.edit, color: Colors.orange[800]),
               ),
-            ),
-            SizedBox(width: 20.0),
-            GestureDetector(
-              onTap: () => onDelete(rentitem),
-              child: Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey[200],
+              SizedBox(width: 20.0),
+              GestureDetector(
+                onTap: () => onDelete(rentitem),
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[200],
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.delete, color: Colors.red[800]),
                 ),
-                alignment: Alignment.center,
-                child: Icon(Icons.delete, color: Colors.red[800]),
               ),
-            ),
+            ],
           ],
         ),
       ),

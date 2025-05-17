@@ -30,7 +30,7 @@ class _RentItemFormPageState extends State<RentItemFormPage> {
 
   Future<List<ItemType>> _getItemTypes() async {
     final itemtypes = await _databaseService.itemtypes();
-    if (_itemtypes.length == 0) _itemtypes.addAll(itemtypes);
+    if (_itemtypes.isEmpty) _itemtypes.addAll(itemtypes);
     if (widget.rentitem != null) {
       _selectedItemType = _itemtypes.indexWhere((e) => e.id == widget.rentitem!.itemtypeId);
     }

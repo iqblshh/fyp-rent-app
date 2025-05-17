@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/common_widgets/rentitem_builder.dart';
 import 'package:fyp_iqbal/common_widgets/itemtype_builder.dart';
+import 'package:fyp_iqbal/common_widgets/rental_builder.dart';
 import 'package:fyp_iqbal/models/itemtype.dart';
 import 'package:fyp_iqbal/models/rentitem.dart';
+import 'package:fyp_iqbal/models/rental.dart';
 import 'package:fyp_iqbal/pages/itemtype_form_page.dart';
 import 'package:fyp_iqbal/pages/rentitem_form_page.dart';
 import 'package:fyp_iqbal/services/database_service.dart';
@@ -26,6 +28,10 @@ class _HomePageState extends State<HomePage> {
     return await _databaseService.itemtypes();
   }
 
+  Future<List<Rental>> _getRentals() async {
+    return await _databaseService.rentals();
+  }
+
   Future<void> _onRentItemDelete(RentItem rentitem) async {
     await _databaseService.deleteRentItem(rentitem.id!);
     setState(() {});
@@ -39,10 +45,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('RentItem Database'),
+          title: Text('Inventory Management'),
           centerTitle: true,
           bottom: TabBar(
             tabs: [
@@ -54,45 +60,87 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Text('ItemTypes'),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Text('Rental'),
+              ),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            RentItemBuilder(
-              future: _getRentItems(),
-              onEdit: (value) {
-                {
+            Scaffold(
+              body: RentItemBuilder(
+                future: _getRentItems(),
+                onEdit: (value) {
+                  {
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (_) => RentItemFormPage(rentitem: value),
+                            fullscreenDialog: true,
+                          ),
+                        )
+                        .then((_) => setState(() {}));
+                  }
+                },
+                onDelete: _onRentItemDelete,
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
                   Navigator.of(context)
                       .push(
                         MaterialPageRoute(
-                          builder: (_) => RentItemFormPage(rentitem: value),
+                          builder: (_) => RentItemFormPage(),
                           fullscreenDialog: true,
                         ),
                       )
                       .then((_) => setState(() {}));
-                }
-              },
-              onDelete: _onRentItemDelete,
+                },
+                heroTag: 'addRentItem',
+                child: FaIcon(FontAwesomeIcons.paw),
+              ),
             ),
-            ItemTypeBuilder(
-              future: _getItemTypes(),
-              onEdit: (value) {
-                {
+            Scaffold(
+              body: ItemTypeBuilder(
+                future: _getItemTypes(),
+                onEdit: (value) {
+                  {
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (_) => ItemTypeFormPage(itemtype: value),
+                            fullscreenDialog: true,
+                          ),
+                        )
+                        .then((_) => setState(() {}));
+                  }
+                },
+                onDelete: _onItemTypeDelete,
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
                   Navigator.of(context)
                       .push(
                         MaterialPageRoute(
-                          builder: (_) => ItemTypeFormPage(itemtype: value),
+                          builder: (_) => ItemTypeFormPage(),
                           fullscreenDialog: true,
                         ),
                       )
                       .then((_) => setState(() {}));
-                }
-              },
-              onDelete: _onItemTypeDelete,
+                },
+                heroTag: 'addItemType',
+                child: FaIcon(FontAwesomeIcons.plus),
+              ),
+            ),
+            Scaffold(
+              body: RentalBuilder(
+                future: _getRentals(),
+              ),
             ),
           ],
         ),
+        /** 
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -126,7 +174,7 @@ class _HomePageState extends State<HomePage> {
               child: FaIcon(FontAwesomeIcons.paw),
             ),
           ],
-        ),
+        ),*/
       ),
     );
   }
