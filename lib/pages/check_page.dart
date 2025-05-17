@@ -47,7 +47,7 @@ class _CheckPageState extends State<CheckPage> {
 
     await _databaseService.insertRental(
       Rental(
-        itemId: rentitem.id!, 
+        rentitemId: rentitem.id!, 
         itemType: itemtypes[rentitem.itemtypeId].name, 
         itemName: rentitem.name, 
         statime: DateFormat.Hm().format(now), 

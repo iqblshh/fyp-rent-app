@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class Rental {
   final int? id;
-  final int itemId;
+  final int rentitemId;
   final String itemType;
   final String itemName;
   final String statime;
@@ -13,7 +13,7 @@ class Rental {
 
   Rental({
     this.id,
-    required this.itemId,
+    required this.rentitemId,
     required this.itemType,
     required this.itemName,
     required this.statime,
@@ -28,7 +28,7 @@ class Rental {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'itemId': itemId,
+      'rentitemId': rentitemId,
       'itemType': itemType,
       'itemName': itemName,
       'statime': statime,
@@ -42,7 +42,7 @@ class Rental {
   factory Rental.fromMap(Map<String, dynamic> map) {
     return Rental(
       id: map['id']?.toInt() ?? 0,
-      itemId: map['itemId']?.toInt() ?? 0,
+      rentitemId: map['rentitemId']?.toInt() ?? 0,
       itemType: map['itemType'] ?? '',
       itemName: map['itemName'] ?? '',
       statime: map['statime'] ?? '',
@@ -61,6 +61,6 @@ class Rental {
   // each rental when using the print statement.
   @override
   String toString() {
-    return 'Rental(id: $id, itemId: $itemId, itemType: $itemType, itemName: $itemName, statime: $statime, endtime: $endtime, date: $date, price: $price, status: $status)';
+    return 'Rental(id: $id, rentitemId: $rentitemId, itemType: $itemType, itemName: $itemName, statime: $statime, endtime: $endtime, date: $date, price: $price, status: $status)';
   }
 }
