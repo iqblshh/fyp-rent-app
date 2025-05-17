@@ -45,15 +45,20 @@ class _CheckPageState extends State<CheckPage> {
     final itemtypes = await _databaseService.itemtypes();
     final now = DateTime.now();
 
+    final itemtype = itemtypes.firstWhere(
+      (type) => type.id == rentitem.itemtypeId,
+      orElse: () => throw Exception('ItemType not found'),
+    );
+
     await _databaseService.insertRental(
       Rental(
         rentitemId: rentitem.id!, 
-        itemType: itemtypes[rentitem.itemtypeId].name, 
+        itemType: itemtype.name, 
         itemName: rentitem.name, 
         statime: DateFormat.Hm().format(now), 
-        endtime: DateFormat.Hm().format(now.add(Duration(minutes: itemtypes[rentitem.itemtypeId].timer))), 
+        endtime: DateFormat.Hm().format(now.add(Duration(minutes: itemtype.timer))), 
         date: DateFormat.yMEd().format(now), 
-        price: itemtypes[rentitem.itemtypeId].price, 
+        price: itemtype.price, 
         status: status,
       ),
     );
