@@ -32,6 +32,20 @@ class _RentalBuilderState extends State<RentalBuilder> {
     });
   }
 
+  String _formatRemainingTime(Duration duration) {
+    if (duration.isNegative) return "Expired";
+
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
+
+  DateTime _parseEndTime(String endtimeString) {
+    final now = DateTime.now();
+    final parts = endtimeString.split(':');
+    return DateTime(now.year, now.month, now.day, int.parse(parts[0]), int.parse(parts[1]));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Rental>>(
@@ -74,7 +88,13 @@ class _RentalBuilderState extends State<RentalBuilder> {
   }
 
   Widget _buildRentalCard(Rental rental, BuildContext context) {
+    final endTime = _parseEndTime(rental.endtime);
+    final now = DateTime.now();
+    final remaining = endTime.difference(now);
+    final formattedTime = _formatRemainingTime(remaining);
+
     return Card(
+      color: remaining.isNegative ? Colors.red[200] : Colors.green[200],
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -130,6 +150,14 @@ class _RentalBuilderState extends State<RentalBuilder> {
                     style: TextStyle(
                       fontSize: 18.0,
                       //fontWeight: FontWeight.w500,
+                    )
+                  ),
+                  SizedBox(width: 2.0),
+                  Text(
+                    "Timer- $formattedTime",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
                     )
                   ),
                 ],
