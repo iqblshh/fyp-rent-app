@@ -38,15 +38,7 @@ class _CheckPageState extends State<CheckPage> {
   }
 
   Future<List<Rental>> _getRentals() async {
-    final allRentals = await _databaseService.rentals();
-    final today = DateTime.now();
-
-    return allRentals.where((rental) {
-      final rentalDate = DateFormat.yMEd().parse(rental.date);
-      return rentalDate.year == today.year &&
-            rentalDate.month == today.month &&
-            rentalDate.day == today.day;
-    }).toList();
+    return await _databaseService.rentals();
   }
 
   Future<void> _onBookItem(RentItem rentitem, int status) async {
@@ -104,6 +96,7 @@ class _CheckPageState extends State<CheckPage> {
             ),
             RentalBuilder(
               future: _getRentals(),
+              onRentalPage: true,
             ),
           ],
         ),

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/models/rental.dart';
+import 'package:intl/intl.dart';
 
 class RentalBuilder extends StatefulWidget {
   const RentalBuilder({
     Key? key,
     required this.future,
+    this.onRentalPage = false,
   }) : super(key: key);
   final Future<List<Rental>> future;
+  final bool onRentalPage;
 
   @override
   _RentalBuilderState createState() => _RentalBuilderState();
@@ -44,6 +47,14 @@ class _RentalBuilderState extends State<RentalBuilder> {
           return Center(child: Text('No rentals found'));
         }
 
+        List<Rental> rentals = snapshot.data!;
+
+        if (widget.onRentalPage) {
+          final today = DateFormat.yMEd().format(DateTime.now());
+          rentals = rentals.where((r) => r.date == today).toList();
+        }
+
+
         // Scroll to bottom after frame renders
         _scrollToBottom();
 
@@ -51,9 +62,9 @@ class _RentalBuilderState extends State<RentalBuilder> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: snapshot.data!.length,
+            itemCount: rentals.length,
             itemBuilder: (context, index) {
-              final rental = snapshot.data![index];
+              final rental = rentals[index];
               return _buildRentalCard(rental, context);
             },
           ),
