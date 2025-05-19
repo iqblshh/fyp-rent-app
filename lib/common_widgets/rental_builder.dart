@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fyp_iqbal/models/rental.dart';
+import 'package:fyp_iqbal/services/database_service.dart';
 import 'package:intl/intl.dart';
 
 class RentalBuilder extends StatefulWidget {
@@ -17,6 +19,8 @@ class RentalBuilder extends StatefulWidget {
 
 class _RentalBuilderState extends State<RentalBuilder> {
   final ScrollController _scrollController = ScrollController();
+  final DatabaseService _databaseService = DatabaseService();
+
 
   List<Rental> _allRentals = [];
   List<Rental> _displayedRentals = [];
@@ -65,6 +69,22 @@ class _RentalBuilderState extends State<RentalBuilder> {
     });
   }
 
+  Future<void> _onStatus(Rental rental) async {
+    await _databaseService.updateRental(rental.id!, 0);  
+  }
+
+  //Rental(
+        //rentitemId: rental.id!, 
+        //itemType: rental.itemType, 
+        //itemName: rental.itemName, 
+        //statime: rental.statime, 
+        //endtime: rental.endtime, 
+        //date: rental.date, 
+        //price: rental.price, 
+        //paid: rental.paid, 
+        //status: 0,
+      //),
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -84,55 +104,6 @@ class _RentalBuilderState extends State<RentalBuilder> {
     final parts = endtimeString.split(':');
     return DateTime(now.year, now.month, now.day, int.parse(parts[0]), int.parse(parts[1]));
   }
-
-
-///
-/**
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Rental>>(
-      future: widget.future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No rentals found'));
-        }
-
-        List<Rental> rentals = snapshot.data!;
-
-        if (widget.onRentalPage) {
-          final today = DateFormat.yMEd().format(DateTime.now());
-          rentals = rentals.where((r) => r.date == today).toList();
-        }
-
-
-        // Scroll to bottom after frame renders
-        _scrollToBottom();
-
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: ListView.builder(
-            controller: _scrollController,
-            itemCount: rentals.length,
-            itemBuilder: (context, index) {
-              final rental = rentals[index];
-              return _buildRentalCard(rental, context);
-            },
-          ),
-        );
-      },
-    );
-  }
-
-*/
-///
 
   @override
   Widget build(BuildContext context) {
@@ -180,6 +151,24 @@ class _RentalBuilderState extends State<RentalBuilder> {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
+            if (widget.onRentalPage) ...[
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  _onStatus(rental);
+                },
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[200],
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.delete, color: Colors.red[800]),
+                ),
+              ),
+            ],
             Container(
               height: 40.0,
               width: 40.0,
@@ -242,7 +231,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
                         fontWeight: FontWeight.w500,
                       )
                     )
-                    :  Text(
+                    : Text(
                       "Price- RM${rental.price.toString()}",
                       //"Status- ${rental.status}",
                       style: TextStyle(
@@ -253,6 +242,29 @@ class _RentalBuilderState extends State<RentalBuilder> {
                 ],
               ),
             ),
+            if (widget.onRentalPage) ...[
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  _onStatus(rental);
+                },
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.grey[200],
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Status', 
+                    //style: TextStyle(
+                    //  color: Colors.b[800]
+                    //)
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

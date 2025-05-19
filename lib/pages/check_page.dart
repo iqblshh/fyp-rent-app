@@ -41,7 +41,7 @@ class _CheckPageState extends State<CheckPage> {
     return await _databaseService.rentals();
   }
 
-  Future<void> _onBookItem(RentItem rentitem, int status) async {
+  Future<void> _onBookItem(RentItem rentitem, int paid) async {
     final itemtypes = await _databaseService.itemtypes();
     final now = DateTime.now();
 
@@ -59,7 +59,8 @@ class _CheckPageState extends State<CheckPage> {
         endtime: DateFormat.Hm().format(now.add(Duration(minutes: itemtype.timer))), 
         date: DateFormat.yMEd().format(now), 
         price: itemtype.price, 
-        status: status,
+        paid: paid, 
+        status: 0,
       ),
     );
   }

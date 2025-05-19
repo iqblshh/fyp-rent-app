@@ -9,6 +9,7 @@ class Rental {
   final String endtime;
   final String date;
   final int price;
+  final int paid;
   final int status;
 
   Rental({
@@ -20,6 +21,7 @@ class Rental {
     required this.endtime,
     required this.date,
     required this.price,
+    required this.paid,
     required this.status,
   });
 
@@ -35,6 +37,7 @@ class Rental {
       'endtime': endtime,
       'date': date,
       'price': price,
+      'paid': paid,
       'status': status,
     };
   }
@@ -49,6 +52,7 @@ class Rental {
       endtime: map['endtime'] ?? '',
       date: map['date'] ?? '',
       price: map['price']?.toInt() ?? 0,
+      paid: map['paid']?.toInt() ?? 0,
       status: map['status']?.toInt() ?? 0,
     );
   }
@@ -61,6 +65,6 @@ class Rental {
   // each rental when using the print statement.
   @override
   String toString() {
-    return 'Rental(id: $id, rentitemId: $rentitemId, itemType: $itemType, itemName: $itemName, statime: $statime, endtime: $endtime, date: $date, price: $price, status: $status)';
+    return 'Rental(id: $id, rentitemId: $rentitemId, itemType: $itemType, itemName: $itemName, statime: $statime, endtime: $endtime, date: $date, price: $price, paid: $paid, status: $status)';
   }
 }
