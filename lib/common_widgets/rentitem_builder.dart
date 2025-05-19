@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fyp_iqbal/models/rentitem.dart';
 import 'package:fyp_iqbal/services/database_service.dart';
 
@@ -55,7 +56,10 @@ class RentItemBuilder extends StatelessWidget {
           children: [
             if (!showActions) ...[
               GestureDetector(
-                onTap: () => onBook(rentitem, 0),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  onBook(rentitem, 0);
+                },
                 child: Container(
                   height: 40.0,
                   width: 40.0,
@@ -94,7 +98,10 @@ class RentItemBuilder extends StatelessWidget {
             SizedBox(width: 20.0),
             if (showActions) ...[
               GestureDetector(
-                onTap: () => onEdit(rentitem),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  onEdit(rentitem);
+                },
                 child: Container(
                   height: 40.0,
                   width: 40.0,
@@ -108,7 +115,10 @@ class RentItemBuilder extends StatelessWidget {
               ),
               SizedBox(width: 20.0),
               GestureDetector(
-                onTap: () => onDelete(rentitem),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  onDelete(rentitem);
+                },
                 child: Container(
                   height: 40.0,
                   width: 40.0,
@@ -123,7 +133,10 @@ class RentItemBuilder extends StatelessWidget {
             ],
             if (!showActions) ...[
               GestureDetector(
-                onTap: () => onBook(rentitem, 1),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  onBook(rentitem, 1);
+                },
                 child: Container(
                   height: 40.0,
                   width: 40.0,

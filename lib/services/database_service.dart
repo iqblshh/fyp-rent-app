@@ -136,7 +136,7 @@ class DatabaseService {
 
   Future<List<Rental>> rentals() async {
     final db = await _databaseService.database;
-    final List<Map<String, dynamic>> maps = await db.query('rentals');
+    final List<Map<String, dynamic>> maps = await db.query('rentals', orderBy: 'id DESC');
     return List.generate(maps.length, (index) => Rental.fromMap(maps[index]));
   }
 

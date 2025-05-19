@@ -18,18 +18,57 @@ class RentalBuilder extends StatefulWidget {
 class _RentalBuilderState extends State<RentalBuilder> {
   final ScrollController _scrollController = ScrollController();
 
+  List<Rental> _allRentals = [];
+  List<Rental> _displayedRentals = [];
+  final int _itemsPerPage = 10;
+  int _currentPage = 0;
+  bool _isLoadingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialData();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+      _loadMoreData();
+    }
+  }
+
+  Future<void> _loadInitialData() async {
+    final allData = await widget.future;
+    if (!mounted) return;
+
+    setState(() {
+      _allRentals = widget.onRentalPage
+          ? allData.where((r) => r.date == DateFormat.yMEd().format(DateTime.now())).toList()
+          : allData;
+      _displayedRentals = _allRentals.take(_itemsPerPage).toList();
+      _currentPage = 1;
+    });
+  }
+
+  void _loadMoreData() {
+    if (_isLoadingMore || _displayedRentals.length >= _allRentals.length) return;
+
+    setState(() => _isLoadingMore = true);
+
+    Future.delayed(Duration(milliseconds: 500), () {
+      final nextItems = _allRentals.skip(_currentPage * _itemsPerPage).take(_itemsPerPage).toList();
+      setState(() {
+        _displayedRentals.addAll(nextItems);
+        _currentPage++;
+        _isLoadingMore = false;
+      });
+    });
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      }
-    });
   }
 
   String _formatRemainingTime(Duration duration) {
@@ -45,6 +84,10 @@ class _RentalBuilderState extends State<RentalBuilder> {
     final parts = endtimeString.split(':');
     return DateTime(now.year, now.month, now.day, int.parse(parts[0]), int.parse(parts[1]));
   }
+
+
+///
+/**
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +115,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
         // Scroll to bottom after frame renders
         _scrollToBottom();
 
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ListView.builder(
@@ -87,6 +131,40 @@ class _RentalBuilderState extends State<RentalBuilder> {
     );
   }
 
+*/
+///
+
+  @override
+  Widget build(BuildContext context) {
+    if (_allRentals.isEmpty && _displayedRentals.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    if (_displayedRentals.isEmpty) {
+      return Center(child: Text('No rentals found'));
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: _displayedRentals.length + (_isLoadingMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == _displayedRentals.length) {
+            return Center(child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ));
+          }
+
+          final rental = _displayedRentals[index];
+          return _buildRentalCard(rental, context);
+        },
+      ),
+    );
+  }
+
+
   Widget _buildRentalCard(Rental rental, BuildContext context) {
     final endTime = _parseEndTime(rental.endtime);
     final now = DateTime.now();
@@ -94,7 +172,10 @@ class _RentalBuilderState extends State<RentalBuilder> {
     final formattedTime = _formatRemainingTime(remaining);
 
     return Card(
-      color: remaining.isNegative ? Colors.red[200] : Colors.green[200],
+      color: widget.onRentalPage
+        ? (remaining.isNegative ? Colors.red[200] : Colors.green[200])
+        : null,
+      //color: remaining.isNegative ? Colors.red[200] : Colors.green[200],
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -153,13 +234,22 @@ class _RentalBuilderState extends State<RentalBuilder> {
                     )
                   ),
                   SizedBox(width: 2.0),
-                  Text(
-                    "Timer- $formattedTime",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500,
+                  widget.onRentalPage 
+                    ? Text(
+                      "Timer- $formattedTime",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      )
                     )
-                  ),
+                    :  Text(
+                      "Price- RM${rental.price.toString()}",
+                      //"Status- ${rental.status}",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        //fontWeight: FontWeight.w500,
+                      )
+                    ),
                 ],
               ),
             ),

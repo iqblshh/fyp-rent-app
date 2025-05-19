@@ -22,7 +22,7 @@ class _CheckPageState extends State<CheckPage> {
   @override
   void initState() {
     super.initState();
-    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _refreshTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       setState(() {});
     });
   }
@@ -80,7 +80,7 @@ class _CheckPageState extends State<CheckPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Text('Timer'),
+                child: Text('Ongoing'),
               ),
             ],
           ),
