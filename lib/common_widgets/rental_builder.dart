@@ -151,39 +151,44 @@ class _RentalBuilderState extends State<RentalBuilder> {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            if (widget.onRentalPage) ...[
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  _onStatus(rental);
-                },
-                child: Container(
+            Column(
+              children: [
+                Container(
                   height: 40.0,
                   width: 40.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.grey[200],
+                    color: Colors.grey[300],
                   ),
                   alignment: Alignment.center,
-                  child: Icon(Icons.delete, color: Colors.red[800]),
+                  child: Text(
+                    rental.id.toString(),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-            Container(
-              height: 40.0,
-              width: 40.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey[300],
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                rental.id.toString(),
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+                SizedBox(height: 30.0),                  
+                if (widget.onRentalPage) ...[
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      _onStatus(rental);
+                    },
+                    child: Container(
+                      height: 40.0,
+                      width: 40.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[200],
+                      ),
+                      alignment: Alignment.center,
+                      child: Icon(Icons.delete, color: Colors.red[800]),
+                    ),
+                  ),
+                ],
+              ],
             ),
             SizedBox(width: 20.0),
             Expanded(
@@ -250,7 +255,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
                 },
                 child: Container(
                   height: 40.0,
-                  width: 40.0,
+                  width: 50.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     color: Colors.grey[200],

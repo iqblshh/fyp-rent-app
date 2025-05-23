@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/pages/inventory_page.dart';
 import 'package:fyp_iqbal/pages/check_page.dart';
+import 'package:fyp_iqbal/utils/populate_database.dart';
 
 class IndexPage extends StatelessWidget {
   @override
@@ -39,7 +40,7 @@ class IndexPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Action for Setting button
-                print('Setting button pressed');
+                //populateDatabase();
               },
               child: Text('Setting'),
             ),
