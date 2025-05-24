@@ -1,9 +1,19 @@
-/**
+
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/index_page.dart';
+import 'package:fyp_iqbal/mqtt/mqtt_app_state.dart';
+import 'package:provider/provider.dart';
+
 
 void main() {
-  runApp(RentApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MQTTAppState()),
+      ],
+      child: RentApp(),
+    ),
+  );
 }
 
 class RentApp extends StatelessWidget {
@@ -20,33 +30,31 @@ class RentApp extends StatelessWidget {
   }
 }
 
-*/
 
+/** 
 import 'package:flutter/material.dart';
-import 'package:fyp_iqbal/mqtt_stf/mqtt/state/MQTTAppState.dart';
-import 'package:fyp_iqbal/mqtt_stf/widgets/mqttView.dart';
+import 'package:fyp_iqbal/mqtt/mqtt_app_state.dart';
+import 'package:fyp_iqbal/mqtt/mqtt_page.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(RentApp());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MQTTAppState()),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
 
-class RentApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    /*
-    final MQTTManager manager = MQTTManager(host:'test.mosquitto.org',topic:'flutter/amp/cool',identifier:'ios');
-    manager.initializeMQTTClient();
-
-     */
-
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: ChangeNotifierProvider<MQTTAppState>(
-          create: (_) => MQTTAppState(),
-          child: MQTTView(),
-        ));
+      title: 'MQTT Demo',
+      home: MqttView(),
+    );
   }
 }
+*/

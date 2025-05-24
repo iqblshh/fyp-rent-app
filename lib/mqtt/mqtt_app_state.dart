@@ -1,5 +1,4 @@
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 enum MQTTAppConnectionState { connected, disconnected, connecting }
 class MQTTAppState with ChangeNotifier{
@@ -10,6 +9,7 @@ class MQTTAppState with ChangeNotifier{
   void setReceivedText(String text) {
     _receivedText = text;
     _historyText = _historyText + '\n' + _receivedText;
+    print('Received Text: $_receivedText');
     notifyListeners();
   }
   void setAppConnectionState(MQTTAppConnectionState state) {

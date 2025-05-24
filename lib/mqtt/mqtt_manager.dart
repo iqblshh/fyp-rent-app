@@ -1,4 +1,4 @@
-import 'package:fyp_iqbal/mqtt_stf/mqtt/state/MQTTAppState.dart';
+import 'package:fyp_iqbal/mqtt/mqtt_app_state.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -10,13 +10,16 @@ class MQTTManager {
   final String _host;
   final String _topic;
 
+  final void Function(String message)? onMessageReceived;
+
   // Constructor
   // ignore: sort_constructors_first
   MQTTManager(
       {required String host,
       required String topic,
       required String identifier,
-      required MQTTAppState state})
+      required MQTTAppState state,
+      this.onMessageReceived})
       : _identifier = identifier,
         _host = host,
         _topic = topic,
@@ -90,19 +93,21 @@ class MQTTManager {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     print('EXAMPLE::Mosquitto client connected....');
     _client!.subscribe(_topic, MqttQos.atLeastOnce);
+
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
-
       // final MqttPublishMessage recMess = c![0].payload;
       final String pt =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message!);
       _currentState.setReceivedText(pt);
-      print(
-          'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-      print('');
+      print('EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+      
+      if (onMessageReceived != null) {
+        onMessageReceived!(pt);
+      }
+
     });
-    print(
-        'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+    print('EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 }

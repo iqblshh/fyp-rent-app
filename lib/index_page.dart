@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fyp_iqbal/mqtt/mqtt_page.dart';
 import 'package:fyp_iqbal/pages/inventory_page.dart';
 import 'package:fyp_iqbal/pages/check_page.dart';
-import 'package:fyp_iqbal/utils/populate_database.dart';
 
 class IndexPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,8 +40,10 @@ class IndexPage extends StatelessWidget {
             SizedBox(height: 20), // Space between buttons
             ElevatedButton(
               onPressed: () {
-                // Action for Setting button
-                //populateDatabase();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MQTTView()),
+                );
               },
               child: Text('Setting'),
             ),
@@ -50,3 +53,16 @@ class IndexPage extends StatelessWidget {
     );
   }
 }
+
+
+/**
+return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: ChangeNotifierProvider<MQTTAppState>(
+          create: (_) => MQTTAppState(),
+          child: MQTTView(),
+        ));
+ */

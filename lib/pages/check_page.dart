@@ -11,6 +11,8 @@ class CheckPage extends StatefulWidget {
   const CheckPage({Key? key, this.rental}) : super(key: key);
   final Rental? rental;
 
+  static void Function()? refreshCallback;
+
   @override
   _CheckPageState createState() => _CheckPageState();
 }
@@ -22,6 +24,11 @@ class _CheckPageState extends State<CheckPage> {
   @override
   void initState() {
     super.initState();
+
+    CheckPage.refreshCallback = () {
+      if (mounted) setState(() {});
+    };
+
     _refreshTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       setState(() {});
     });
@@ -29,6 +36,7 @@ class _CheckPageState extends State<CheckPage> {
 
   @override
   void dispose() {
+    CheckPage.refreshCallback = null;
     _refreshTimer?.cancel();
     super.dispose();
   }
