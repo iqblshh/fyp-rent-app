@@ -8,9 +8,13 @@ class RentalBuilder extends StatefulWidget {
   const RentalBuilder({
     Key? key,
     required this.future,
+    required this.onDelete,
+    required this.onStatus,
     this.onRentalPage = false,
   }) : super(key: key);
   final Future<List<Rental>> future;
+  final Function(Rental) onDelete;
+  final Function(Rental, int) onStatus;
   final bool onRentalPage;
 
   @override
@@ -31,7 +35,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
   @override
   void initState() {
     super.initState();
-    _loadInitialData();
+    //_loadInitialData();
     _scrollController.addListener(_onScroll);
   }
 
@@ -69,10 +73,6 @@ class _RentalBuilderState extends State<RentalBuilder> {
     });
   }
 
-  Future<void> _onStatus(Rental rental) async {
-    await _databaseService.updateRental(rental.id!, 0);  
-  }
-
   //Rental(
         //rentitemId: rental.id!, 
         //itemType: rental.itemType, 
@@ -105,10 +105,11 @@ class _RentalBuilderState extends State<RentalBuilder> {
     return DateTime(now.year, now.month, now.day, int.parse(parts[0]), int.parse(parts[1]));
   }
 
+  /**
   @override
   Widget build(BuildContext context) {
     if (_allRentals.isEmpty && _displayedRentals.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Text('No rentals found'));
     }
 
     if (_displayedRentals.isEmpty) {
@@ -132,6 +133,50 @@ class _RentalBuilderState extends State<RentalBuilder> {
           return _buildRentalCard(rental, context);
         },
       ),
+    );
+  }
+  */
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Rental>>(
+      future: widget.future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No rentals found'));
+        }
+
+        final allData = widget.onRentalPage
+            ? snapshot.data!.where((r) => r.date == DateFormat.yMEd().format(DateTime.now())).toList()
+            : snapshot.data!;
+
+        _allRentals = allData;
+        _displayedRentals = _allRentals.take(_itemsPerPage).toList();
+        _currentPage = 1;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: _displayedRentals.length + (_isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == _displayedRentals.length) {
+                return Center(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ));
+              }
+
+              final rental = _displayedRentals[index];
+              return _buildRentalCard(rental, context);
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -174,7 +219,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
                   GestureDetector(
                     onTap: () {
                       HapticFeedback.vibrate();
-                      _onStatus(rental);
+                      widget.onDelete(rental);
                     },
                     child: Container(
                       height: 40.0,
@@ -237,7 +282,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
                       )
                     )
                     : Text(
-                      "Price- RM${rental.price.toString()}",
+                      rental.date,
                       //"Status- ${rental.status}",
                       style: TextStyle(
                         fontSize: 18.0,
@@ -251,21 +296,23 @@ class _RentalBuilderState extends State<RentalBuilder> {
               GestureDetector(
                 onTap: () {
                   HapticFeedback.vibrate();
-                  _onStatus(rental);
+                  final newStatus = rental.status == 0 ? 1 : 0;
+                  widget.onStatus(rental, newStatus);
                 },
                 child: Container(
                   height: 40.0,
-                  width: 50.0,
+                  width: 100.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     color: Colors.grey[200],
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    'Status', 
-                    //style: TextStyle(
-                    //  color: Colors.b[800]
-                    //)
+                    rental.status == 1 ? 'Finished' : 'On Track',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: rental.status == 1 ? Colors.green : Colors.blue,
+                    ),
                   ),
                 ),
               ),

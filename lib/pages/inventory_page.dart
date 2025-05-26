@@ -137,45 +137,12 @@ class _HomePageState extends State<HomePage> {
             Scaffold(
               body: RentalBuilder(
                 future: _getRentals(),
+                onDelete: (_) {},
+                onStatus: (_, __) {},
               ),
             ),
           ],
         ),
-        /** 
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                        builder: (_) => ItemTypeFormPage(),
-                        fullscreenDialog: true,
-                      ),
-                    )
-                    .then((_) => setState(() {}));
-              },
-              heroTag: 'addItemType',
-              child: FaIcon(FontAwesomeIcons.plus),
-            ),
-            SizedBox(height: 12.0),
-            FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                        builder: (_) => RentItemFormPage(),
-                        fullscreenDialog: true,
-                      ),
-                    )
-                    .then((_) => setState(() {}));
-              },
-              heroTag: 'addRentItem',
-              child: FaIcon(FontAwesomeIcons.paw),
-            ),
-          ],
-        ),*/
       ),
     );
   }

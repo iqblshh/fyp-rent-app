@@ -70,7 +70,7 @@ class DatabaseService {
           price INTEGER,
           paid INTEGER, 
           status INTEGER, 
-          FOREIGN KEY (rentitemID) REFERENCES rentitems(id)
+          FOREIGN KEY (rentitemID) REFERENCES rentitems(id) ON DELETE SET NULL
       )
     ''');
   }

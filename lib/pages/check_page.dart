@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 
 class CheckPage extends StatefulWidget {
-  const CheckPage({Key? key, this.rental}) : super(key: key);
-  final Rental? rental;
+  const CheckPage({Key? key}) : super(key: key);
+  //final Rental? rental;
 
   static void Function()? refreshCallback;
 
@@ -29,7 +29,7 @@ class _CheckPageState extends State<CheckPage> {
       if (mounted) setState(() {});
     };
 
-    _refreshTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
       setState(() {});
     });
   }
@@ -71,6 +71,17 @@ class _CheckPageState extends State<CheckPage> {
         status: 0,
       ),
     );
+    setState(() {}); 
+  }
+
+  Future<void> _onRentalStatus(Rental rental, int newStatus) async {
+    await _databaseService.updateRental(rental.id!, newStatus);
+    setState(() {});
+  }
+
+  Future<void> _onRentalDelete(Rental rental) async {
+    await _databaseService.deleteRental(rental.id!);
+    setState(() {});
   }
 
   @override
@@ -105,6 +116,8 @@ class _CheckPageState extends State<CheckPage> {
             ),
             RentalBuilder(
               future: _getRentals(),
+              onDelete: _onRentalDelete,
+              onStatus: _onRentalStatus,
               onRentalPage: true,
             ),
           ],
