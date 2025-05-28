@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fyp_iqbal/models/rental.dart';
-import 'package:fyp_iqbal/services/database_service.dart';
+//import 'package:fyp_iqbal/services/database_service.dart';
 import 'package:intl/intl.dart';
 
 class RentalBuilder extends StatefulWidget {
@@ -10,11 +10,13 @@ class RentalBuilder extends StatefulWidget {
     required this.future,
     required this.onDelete,
     required this.onStatus,
+    required this.onPaid,
     this.onRentalPage = false,
   }) : super(key: key);
   final Future<List<Rental>> future;
   final Function(Rental) onDelete;
   final Function(Rental, int) onStatus;
+  final Function(Rental, int) onPaid;
   final bool onRentalPage;
 
   @override
@@ -23,7 +25,7 @@ class RentalBuilder extends StatefulWidget {
 
 class _RentalBuilderState extends State<RentalBuilder> {
   final ScrollController _scrollController = ScrollController();
-  final DatabaseService _databaseService = DatabaseService();
+  //final DatabaseService _databaseService = DatabaseService();
 
 
   List<Rental> _allRentals = [];
@@ -104,6 +106,9 @@ class _RentalBuilderState extends State<RentalBuilder> {
     final parts = endtimeString.split(':');
     return DateTime(now.year, now.month, now.day, int.parse(parts[0]), int.parse(parts[1]));
   }
+
+  Set<int> _toggledStatus = {};
+  Set<int> _toggledPaid = {};
 
   @override
   Widget build(BuildContext context) {
@@ -293,28 +298,80 @@ class _RentalBuilderState extends State<RentalBuilder> {
               ),
             ),
             if (widget.onRentalPage) ...[
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  final newStatus = rental.status == 0 ? 1 : 0;
-                  widget.onStatus(rental, newStatus);
-                },
-                child: Container(
-                  height: 40.0,
-                  width: 100.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.grey[200],
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    rental.status == 1 ? 'Finished' : 'On Track',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: rental.status == 1 ? Colors.green : Colors.blue,
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.vibrate();
+
+                      setState(() {
+                        if (_toggledPaid.contains(rental.id)) {
+                          _toggledPaid.remove(rental.id);
+                        } else {
+                          _toggledPaid.add(rental.id!);
+                        }
+                      });
+
+                      final newPaid = rental.paid == 0 ? 1 : 0;
+                      widget.onPaid(rental, newPaid);
+                    },
+                    child: Container(
+                      height: 40.0,
+                      width: 100.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: _toggledPaid.contains(rental.id)
+                          ? (rental.paid == 1 ? Colors.orange[800] : Colors.green[800])
+                          : (rental.paid == 1 ? Colors.green[800] : Colors.orange[800])
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        _toggledPaid.contains(rental.id)
+                          ? (rental.paid == 1 ? 'Unpaid' : 'Paid')
+                          : (rental.paid == 1 ? 'Paid' : 'Unpaid'),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 10.0),
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                  
+                      setState(() {
+                        if (_toggledStatus.contains(rental.id)) {
+                          _toggledStatus.remove(rental.id);
+                        } else {
+                          _toggledStatus.add(rental.id!);
+                        }
+                      });
+                  
+                      final newStatus = rental.status == 0 ? 1 : 0;
+                      widget.onStatus(rental, newStatus);
+                    },
+                    child: Container(
+                      height: 40.0,
+                      width: 100.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: _toggledStatus.contains(rental.id)
+                          ? (rental.status == 1 ? Colors.white : Colors.blue[500])
+                          : (rental.status == 1 ? Colors.blue[500] : Colors.white)
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        _toggledStatus.contains(rental.id)
+                          ? (rental.status == 1 ? 'On Track' : 'Finished')
+                          : (rental.status == 1 ? 'Finished' : 'On Track'),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ],

@@ -29,7 +29,7 @@ class _CheckPageState extends State<CheckPage> {
       if (mounted) setState(() {});
     };
 
-    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _refreshTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       setState(() {});
     });
   }
@@ -64,7 +64,8 @@ class _CheckPageState extends State<CheckPage> {
         itemType: itemtype.name, 
         itemName: rentitem.name, 
         statime: DateFormat.Hm().format(now), 
-        endtime: DateFormat.Hm().format(now.add(Duration(minutes: itemtype.timer))), 
+        endtime: DateFormat.Hm().format(now.add(Duration(minutes: itemtype.timer))),
+        latetime: "0", 
         date: DateFormat.yMEd().format(now), 
         price: itemtype.price, 
         paid: paid, 
@@ -75,7 +76,12 @@ class _CheckPageState extends State<CheckPage> {
   }
 
   Future<void> _onRentalStatus(Rental rental, int newStatus) async {
-    await _databaseService.updateRental(rental.id!, newStatus);
+    await _databaseService.updateRentalStatus(rental.id!, newStatus);
+    setState(() {});
+  }
+
+  Future<void> _onRentalPaid(Rental rental, int newPaid) async {
+    await _databaseService.updateRentalPaid(rental.id!, newPaid);
     setState(() {});
   }
 
@@ -91,6 +97,7 @@ class _CheckPageState extends State<CheckPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Rental'),
+          backgroundColor: const Color.fromARGB(255, 137, 164, 209),
           centerTitle: true,
           bottom: TabBar(
             tabs: [
@@ -118,6 +125,7 @@ class _CheckPageState extends State<CheckPage> {
               future: _getRentals(),
               onDelete: _onRentalDelete,
               onStatus: _onRentalStatus,
+              onPaid: _onRentalPaid,
               onRentalPage: true,
             ),
           ],

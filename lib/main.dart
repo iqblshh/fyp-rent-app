@@ -4,7 +4,6 @@ import 'package:fyp_iqbal/index_page.dart';
 import 'package:fyp_iqbal/mqtt/mqtt_app_state.dart';
 import 'package:provider/provider.dart';
 
-
 void main() {
   runApp(
     MultiProvider(
@@ -23,7 +22,7 @@ class RentApp extends StatelessWidget {
       title: 'Flutter SQFLite Example',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.blue,
       ),
       home: IndexPage(),
     );

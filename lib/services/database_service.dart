@@ -66,6 +66,7 @@ class DatabaseService {
           itemName TEXT, 
           statime TEXT, 
           endtime TEXT, 
+          latetime TEXT, 
           date TEXT, 
           price INTEGER,
           paid INTEGER, 
@@ -162,10 +163,22 @@ class DatabaseService {
     await db.update('rentitems', rentitem.toMap(), where: 'id = ?', whereArgs: [rentitem.id]);
   }
 
-  Future<void> updateRental(int id, int status) async {
+  Future<void> updateRentalStatus(int id, int status) async {
     final db = await _databaseService.database;
     //await db.update('rentals', rental.toMap(), where: 'id = ?', whereArgs: [rental.id]);
     await db.update('rentals', {'status': status}, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> updateRentalPaid(int id, int paid) async {
+    final db = await _databaseService.database;
+    //await db.update('rentals', rental.toMap(), where: 'id = ?', whereArgs: [rental.id]);
+    await db.update('rentals', {'paid': paid}, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> updateRentalTime(int id, String latetime) async {
+    final db = await _databaseService.database;
+    //await db.update('rentals', rental.toMap(), where: 'id = ?', whereArgs: [rental.id]);
+    await db.update('rentals', {'latetime': latetime}, where: 'id = ?', whereArgs: [id]);
   }
 
   // A method that deletes a itemtype data from the itemtypes table.

@@ -1,6 +1,8 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:fyp_iqbal/pages/check_page.dart';
+import 'package:fyp_iqbal/services/database_service.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:fyp_iqbal/mqtt/mqtt_app_state.dart';
 import 'package:fyp_iqbal/mqtt/mqtt_manager.dart';
@@ -56,8 +58,12 @@ class _MQTTViewState extends State<MQTTView> {
     final MQTTAppState appState = Provider.of<MQTTAppState>(context);
     currentAppState = appState;
     final Scaffold scaffold = Scaffold(
-      appBar: AppBar(title: const Text('MQTT'), centerTitle: true),
-      body: SafeArea(child: _buildColumn()),
+      appBar: AppBar(title: const Text('MQTT'), centerTitle: true, backgroundColor: const Color.fromARGB(255, 137, 164, 209)),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: _buildColumn()
+        ),
+      )
     );
     return scaffold;
   }
@@ -112,7 +118,9 @@ class _MQTTViewState extends State<MQTTView> {
       children: <Widget>[
         Expanded(
           child: Container(
-              color: Colors.deepOrangeAccent,
+              color: status == "Connected"
+              ? Colors.green
+              : Colors.deepOrangeAccent,
               child: Text(status, textAlign: TextAlign.center)),
         ),
       ],
@@ -219,9 +227,45 @@ class _MQTTViewState extends State<MQTTView> {
     _saveInputs(); // Save when connecting
   }
 
-  void _onMqttMessage(String message) {
-    if (CheckPage.refreshCallback != null) {
-      CheckPage.refreshCallback!();
+  void _onMqttMessage(String message) async {
+    try {
+      final now = DateFormat.Hm().format(DateTime.now());
+      final data = int.tryParse(message.trim());
+      if (data != null) {
+        final db = await DatabaseService().database;
+
+        final List<Map<String, dynamic>> result = await db.query(
+          'rentals',
+          where: 'rentitemId = ?',
+          whereArgs: [data],
+          orderBy: 'id DESC',
+          limit: 1,
+        );
+
+        if (result.isNotEmpty) {
+          print('This IS A RESULT: $result');
+          final rental = result.first;
+          final int rentalId = rental['id'];
+          final int currentStatus = rental['status'] ?? 0;
+
+          if (currentStatus != 1) {
+            await DatabaseService().updateRentalStatus(rentalId, 1);
+            await DatabaseService().updateRentalTime(rentalId, now);
+            print('Updated rental ID $rentalId status to 1');
+
+            // Refresh UI if available
+            if (CheckPage.refreshCallback != null) {
+              CheckPage.refreshCallback!();
+            }
+          } else {
+            print('Rental ID $rentalId already has status 1');
+          }
+        } else {
+          print('No rental found for rentitemId $data');
+        }
+      }
+    } catch (e) {
+      print("MQTT message pprocessing error: $e");
     }
   }
 

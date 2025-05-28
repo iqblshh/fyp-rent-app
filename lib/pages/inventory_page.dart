@@ -34,12 +34,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _onRentItemDelete(RentItem rentitem) async {
     await _databaseService.deleteRentItem(rentitem.id!);
-    setState(() {});
   }
 
   Future<void> _onItemTypeDelete(ItemType itemtype) async {
     await _databaseService.deleteItemType(itemtype.id!);
-    setState(() {});
   }
 
   @override
@@ -49,6 +47,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Inventory Management'),
+          backgroundColor: const Color.fromARGB(255, 137, 164, 209),
           centerTitle: true,
           bottom: TabBar(
             tabs: [
@@ -99,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       .then((_) => setState(() {}));
                 },
                 heroTag: 'addRentItem',
-                child: FaIcon(FontAwesomeIcons.paw),
+                child: FaIcon(FontAwesomeIcons.plus),
               ),
             ),
             Scaffold(
@@ -139,6 +138,7 @@ class _HomePageState extends State<HomePage> {
                 future: _getRentals(),
                 onDelete: (_) {},
                 onStatus: (_, __) {},
+                onPaid: (_, __) {},
               ),
             ),
           ],

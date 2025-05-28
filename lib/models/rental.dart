@@ -7,6 +7,7 @@ class Rental {
   final String itemName;
   final String statime;
   final String endtime;
+  final String latetime;
   final String date;
   final int price;
   final int paid;
@@ -19,6 +20,7 @@ class Rental {
     required this.itemName,
     required this.statime,
     required this.endtime,
+    required this.latetime,
     required this.date,
     required this.price,
     required this.paid,
@@ -35,6 +37,7 @@ class Rental {
       'itemName': itemName,
       'statime': statime,
       'endtime': endtime,
+      'latetime': latetime,
       'date': date,
       'price': price,
       'paid': paid,
@@ -50,6 +53,7 @@ class Rental {
       itemName: map['itemName'] ?? '',
       statime: map['statime'] ?? '',
       endtime: map['endtime'] ?? '',
+      latetime: map['latetime'] ?? '',
       date: map['date'] ?? '',
       price: map['price']?.toInt() ?? 0,
       paid: map['paid']?.toInt() ?? 0,
@@ -65,6 +69,6 @@ class Rental {
   // each rental when using the print statement.
   @override
   String toString() {
-    return 'Rental(id: $id, rentitemId: $rentitemId, itemType: $itemType, itemName: $itemName, statime: $statime, endtime: $endtime, date: $date, price: $price, paid: $paid, status: $status)';
+    return 'Rental(id: $id, rentitemId: $rentitemId, itemType: $itemType, itemName: $itemName, statime: $statime, endtime: $endtime, latetime: $latetime, date: $date, price: $price, paid: $paid, status: $status)';
   }
 }

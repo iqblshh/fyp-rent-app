@@ -72,6 +72,23 @@ class RentItemBuilder extends StatelessWidget {
                 ),
               ),
             ],
+            SizedBox(width: 10.0),
+            Container(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[300],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                rentitem.id.toString(),
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             SizedBox(width: 20.0),
             Expanded(
               child: Column(
