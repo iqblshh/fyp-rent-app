@@ -35,7 +35,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
   @override
   void initState() {
     super.initState();
-    //_loadInitialData();
+    _loadInitialData();
     _scrollController.addListener(_onScroll);
   }
 
@@ -105,7 +105,6 @@ class _RentalBuilderState extends State<RentalBuilder> {
     return DateTime(now.year, now.month, now.day, int.parse(parts[0]), int.parse(parts[1]));
   }
 
-  /**
   @override
   Widget build(BuildContext context) {
     if (_allRentals.isEmpty && _displayedRentals.isEmpty) {
@@ -135,8 +134,8 @@ class _RentalBuilderState extends State<RentalBuilder> {
       ),
     );
   }
-  */
-
+ 
+  /**
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Rental>>(
@@ -179,6 +178,7 @@ class _RentalBuilderState extends State<RentalBuilder> {
       },
     );
   }
+ */
 
 
   Widget _buildRentalCard(Rental rental, BuildContext context) {
