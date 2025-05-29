@@ -3,6 +3,7 @@ import 'package:fyp_iqbal/mqtt/mqtt_page.dart';
 import 'package:fyp_iqbal/pages/dashboard.dart';
 import 'package:fyp_iqbal/pages/inventory_page.dart';
 import 'package:fyp_iqbal/pages/check_page.dart';
+import 'package:fyp_iqbal/services/populate_db.dart';
 
 
 
@@ -56,6 +57,7 @@ class IndexPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
+                    //MaterialPageRoute(builder: (context) => const PopulateDbPage()),
                     MaterialPageRoute(builder: (context) => MQTTView()),
                   );
                 },

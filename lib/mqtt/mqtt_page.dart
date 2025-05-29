@@ -230,7 +230,9 @@ class _MQTTViewState extends State<MQTTView> {
   void _onMqttMessage(String message) async {
     try {
       final now = DateFormat.Hm().format(DateTime.now());
-      final data = int.tryParse(message.trim());
+
+      final cleanedMessage = message.replaceAll('"', '').trim();
+      final data = int.tryParse(cleanedMessage);
       if (data != null) {
         final db = await DatabaseService().database;
 

@@ -76,7 +76,7 @@ class RentalSummaryPage extends StatelessWidget {
               _buildCard("Total Sales", "RM ${data['totalPrice']}"),
               //_buildCard("Avg Sale", "RM ${data['avgSale'].toStringAsFixed(2)}"),
               _buildCard("Late Rentals", data['totalLate'].toString()),
-              _buildCard("Average Hour Opened", "Hour: ${data['avgHourOpened']}"),
+              _buildCard("Average Hour Opened", "Hour: ${data['avgHourOpened'].toStringAsFixed(1)}"),
               _buildCard("Ongoing Rentals", data['totalOngoing'].toString()),
               _buildCard("Average Sale Per Day", "RM ${data['avgSale']}"),
             ],
