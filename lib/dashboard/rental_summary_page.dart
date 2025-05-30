@@ -86,6 +86,8 @@ class RentalSummaryPage extends StatelessWidget {
     );
   }
 
+//empty comment for commit
+
   Widget _buildCard(String title, String value) {
     return Card(
       elevation: 4,
