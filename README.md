@@ -27,7 +27,7 @@ A **Flutter-based Toy Car Renting System** enhanced with **MQTT + Python** for r
 ### 1. Flutter App
 
 ```bash
-git clone https://github.com/yourusername/smart-toy-car-renting-system.git
+git clone https://github.com/iqblshh/fyp-rent-app.git
 cd smart-toy-car-renting-system
 flutter pub get
 flutter run
