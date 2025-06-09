@@ -1,16 +1,33 @@
-# fyp_iqbal
+# 🚗 Smart Toy Car Renting System
 
-A new Flutter project.
+A **Flutter-based Toy Car Renting System** enhanced with **MQTT + Python** for real-time QR code scanning via webcam and automated rental tracking.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🧩 Features
 
-A few resources to get you started if this is your first Flutter project:
+### 🖥️ Flutter App
+- 📦 **Rental Management** – Tracks car items, types, start/end times, payments, and late returns
+- 📊 **Dashboard Charts**
+  - Rentals and sales over date/day
+  - Rental counts by item type
+  - Late returns by item type
+- 💰 Total sales, rental count, average sales on dashboard
+- 🗃 Local persistence using **Sqflite**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 📡 Python MQTT Scanner
+- 📷 **OpenCV** + **ZBar** webcam-based QR code scanner
+- 🔌 Publishes scanned rental info (e.g., rent item ID) to **MQTT broker**
+- 🔄 Flutter app listens via MQTT and updates rental status in real time
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🚀 Getting Started
+
+### 1. Flutter App
+
+```bash
+git clone https://github.com/yourusername/smart-toy-car-renting-system.git
+cd smart-toy-car-renting-system
+flutter pub get
+flutter run
